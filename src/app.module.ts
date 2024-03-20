@@ -21,10 +21,9 @@ import configEnvironment from './config/config.environment';
         password: configService.get<string>('DATA_BASE_MSSQL_PASWORD'),
         port: parseInt(configService.get<string>('DATA_BASE_MSSQL_PORT')),
         database: configService.get<string>('DATA_BASE_MSSQL_DB'),
-        entities: [__dirname + '**/*.entity{.ts,.js}'],
-        migrations: [__dirname + '**/*.migration{.ts,.js}'],
+        //entities: ['dist/data/entities/*.entity.js'],
+        migrations: ['dist/data/migrations/*.migration.js'],
         migrationsTableName: 'migrations',
-        synchronize: true,
         extra: {
           trustServerCertificate: true,
         }
