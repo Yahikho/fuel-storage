@@ -13,9 +13,7 @@ export class AuthService {
 
     async signIn(userModel: UserModel, userInput: UserSiginModel): Promise<{ access_token: string }> {
 
-        const cryptedPassword = await CryptPassword.hash(userInput.password)
-
-        if (userModel.password !== cryptedPassword) {
+        if (userModel.password !== userInput.password) {
             return { access_token: '' }
         }
 

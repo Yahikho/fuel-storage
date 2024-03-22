@@ -1,9 +1,9 @@
 import * as bcrypt from 'bcrypt'
+import { createHash } from 'crypto';
 
 export class CryptPassword {
 
     static async hash(password: string) {
-        const saltOrRounds = 10;
-        return await bcrypt.hash(password, saltOrRounds)
+        return createHash('sha256').update(password).digest('hex')
     }
 }

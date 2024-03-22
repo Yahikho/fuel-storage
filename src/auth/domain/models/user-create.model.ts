@@ -6,7 +6,7 @@ export class UserCreatenModel {
     @ApiProperty({ description: 'email user' })
     email: string
     @ApiProperty({ description: 'avatar path user' })
-    avatar: string
+    avatar?: string
     @ApiProperty({ description: 'password user' })
     password: string
 }

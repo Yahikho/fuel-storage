@@ -18,6 +18,6 @@ async function bootstrap() {
 
   const consfiService = app.get(ConfigService)
   const port = consfiService.get('PORT')
-  await app.listen(port);
+  await app.listen(3000);
 }
 bootstrap();
