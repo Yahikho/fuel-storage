@@ -21,9 +21,9 @@ export class SignInUseCase {
             if (user) {
                 const authService = new AuthService(this.jwtService)
 
-                const data = await authService.signIn(user, userInput)
+                const data = await authService.signin(user)
 
-                if (data.access_token) {
+                if (data) {
                     return {
                         code: HttpStatus.OK,
                         response: true,

@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserSiginModel } from "src/auth/domain/models/user-sigin.model";
 import { UserModel } from "src/auth/domain/models/user.model";
-import { CryptPassword } from "src/config/crypt-password";
 
 @Injectable()
 export class AuthService {
@@ -11,16 +10,17 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) { }
 
-    async signIn(userModel: UserModel, userInput: UserSiginModel): Promise<{ access_token: string }> {
-
-        if (userModel.password !== userInput.password) {
-            return { access_token: '' }
+    async validaUser(user: UserModel, userInput: UserSiginModel) {
+        if (user && user.password === userInput.password) {
+            return user;
         }
+        return null;
+    }
 
-        const payload = { sub: userModel.id, username: userModel.user_name }
-
+    async signin(user: UserModel) {
+        const payload = { username: user.user_name, sub: user.id };
         return {
-            access_token: await this.jwtService.signAsync(payload)
+            access_token: this.jwtService.sign(payload),
         }
     }
 }

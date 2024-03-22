@@ -13,7 +13,7 @@ export class UserRepositoryStorage implements UserRepository {
     async findByUser(user: UserSiginModel): Promise<UserModel> {
 
         const result: UserModel[] = await this.maganer.query(`
-            SELECT * FROM dbo.GetUserBySignin('${user.user_name}', '${user.user_name}', '${user.password}')
+            SELECT * FROM dbo.GetUserBySignin('${user.value}', '${user.password}')
         `)
         return result[0]
     }
