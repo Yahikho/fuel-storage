@@ -4,8 +4,12 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  
+
   const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService);
+
+  app.setGlobalPrefix(configService.get<string>('DAFAULT_PATH_API'))
 
   const config = new DocumentBuilder()
     .setTitle('API fuel-storage / by Yahiko')
@@ -16,8 +20,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document)
 
-  const consfiService = app.get(ConfigService)
-  const port = consfiService.get('PORT')
-  await app.listen(3000);
+  const port = configService.get<number>('APP_PORT')
+  await app.listen(port);
 }
 bootstrap();

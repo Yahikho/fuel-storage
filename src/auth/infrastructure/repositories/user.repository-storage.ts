@@ -1,4 +1,4 @@
-import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
+import { InjectEntityManager } from "@nestjs/typeorm";
 import { UserCreatenModel } from "src/auth/domain/models/user-create.model";
 import { UserSiginModel } from "src/auth/domain/models/user-sigin.model";
 import { UserOutputModel } from "src/auth/domain/models/user-output.model";

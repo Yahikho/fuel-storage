@@ -14,7 +14,6 @@ export class SignInUseCase {
 
     async execute(userInput: UserSiginModel) {
         try {
-
             userInput.password = await CryptPassword.hash(userInput.password)
 
             const user = await this.userRepository.findByUser(userInput)
