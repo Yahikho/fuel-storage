@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { triggerAsyncId } from "async_hooks";
 import { UserSiginModel } from "src/auth/domain/models/user-sigin.model";
 import { UserModel } from "src/auth/domain/models/user.model";
 
@@ -23,4 +24,4 @@ export class AuthService {
             access_token: this.jwtService.sign(payload),
         }
     }
-}
+}triggerAsyncId
