@@ -4,6 +4,7 @@ import { AuthService } from "../services/auth.service";
 import { UserSiginModel } from "src/auth/domain/models/user-sigin.model";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { CryptPassword } from "src/shared/config/crypt-password";
+import { UserVerified } from "src/auth/domain/services/user-verified.service";
 
 export class SignInUseCase {
 
@@ -19,18 +20,26 @@ export class SignInUseCase {
             const user = await this.userRepository.findByUser(userInput)
 
             if (user) {
-                const authService = new AuthService(this.jwtService)
+                if (UserVerified.execute(user)) {
+                    const authService = new AuthService(this.jwtService)
 
-                const data = await authService.signin(user)
+                    const data = await authService.signin(user)
 
-                if (data) {
-                    return {
-                        code: HttpStatus.OK,
-                        response: true,
-                        message: 'Success Sigin',
-                        data: {
-                            access_token: data.access_token
+                    if (data) {
+                        return {
+                            code: HttpStatus.OK,
+                            response: true,
+                            message: 'Success Sigin',
+                            data: {
+                                access_token: data.access_token
+                            }
                         }
+                    }
+                } else {
+                    return {
+                        code: HttpStatus.UNAUTHORIZED,
+                        response: true,
+                        message: 'User needs to be validated.'
                     }
                 }
             } else {
