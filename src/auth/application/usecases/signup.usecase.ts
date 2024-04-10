@@ -5,7 +5,7 @@ import { UserRepository } from "src/auth/domain/repositories/user.respository";
 
 @Injectable()
 
-export class SignUp {
+export class SignUpUseCase {
 
     constructor(
         private readonly userRepository: UserRepository,
@@ -15,6 +15,7 @@ export class SignUp {
 
         try {
             const userCreated = await this.userRepository.create(user)
+
 
         } catch (err) {
             console.error(err)

@@ -24,11 +24,6 @@ describe('AuthService', () => {
         updated_at: new Date()
     }
 
-    const mockAuthRepository = {
-        validaUser: jest.fn(),
-        signin: jest.fn()
-    }
-
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
             providers: [
