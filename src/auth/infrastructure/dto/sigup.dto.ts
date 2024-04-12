@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsStrongPassword, MaxLength, MinLength, isNotEmpty, isString } from "class-validator"
+import { IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsStrongPassword, Matches, MaxLength, MinLength, isNotEmpty, isString } from "class-validator"
 
 export class SingupDto {
 
@@ -8,11 +8,17 @@ export class SingupDto {
     @IsString()
     @MinLength(5)
     @MaxLength(15)
+    @Matches(/^\S*$/, {
+        message: 'user_name must not contain spaces.'
+    })
     user_name: string
 
     @ApiProperty()
     @IsString()
     @IsEmail()
+    @Matches(/^\S*$/, {
+        message: 'email must not contain spaces.'
+    })
     @IsNotEmpty()
     email: string
 

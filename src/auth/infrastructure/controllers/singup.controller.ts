@@ -17,7 +17,7 @@ export class SignupController {
         @Res() res: Response,
         @Body() body: SingupDto
     ) {
-        const { code, response } = await this.signUpUseCase.execute(body)
+        const { code, ...response } = await this.signUpUseCase.execute(body)
         res.status(code).json(response)
     }
 }

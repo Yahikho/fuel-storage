@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserCreatenModel } from "src/auth/domain/models/user-create.model";
 import { UserRepository } from "src/auth/domain/repositories/user.respository";
+import { CryptPassword } from "src/shared/config/crypt-password";
 
 @Injectable()
 
@@ -14,6 +15,15 @@ export class SignUpUseCase {
         try {
             const userExist = await this.userRepository.findByUserOrEmail(user.user_name, user.email)
             if (userExist) {
+                return {
+                    code: HttpStatus.CONFLICT,
+                    response: false,
+                    message: 'The username or email is already used.'
+                }
+            } else {
+                user.password = await CryptPassword.hash(user.password)
+                user.user_name = user.user_name.toLocaleLowerCase()
+                user.email = user.email.toLocaleLowerCase()
                 const userCreated = await this.userRepository.create(user)
                 if (userCreated) {
                     return {
@@ -27,12 +37,6 @@ export class SignUpUseCase {
                         response: false,
                         message: 'The user was not created, try again.'
                     }
-                }
-            } else {
-                return {
-                    code: HttpStatus.CONFLICT,
-                    response: false,
-                    message: 'The username or email is already used.'
                 }
             }
         } catch (err) {
