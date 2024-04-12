@@ -8,6 +8,8 @@ import { LocalStrategy } from "src/shared/strategies/local.strategy";
 import { PassportModule } from "@nestjs/passport";
 import { JwtStrategy } from "src/shared/strategies/jwt.strategy";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { SignupController } from "./infrastructure/controllers/singup.controller";
+import { SignUpUseCase } from "./application/usecases/signup.usecase";
 
 @Module({
     imports: [
@@ -36,9 +38,19 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
                 const userRepositoryStorage = new UserRepositoryStorage(entityManager)
                 return new SignInUseCase(userRepositoryStorage, jwtService)
             }, inject: [EntityManager, JwtService]
+        },
+        {
+            provide: SignUpUseCase,
+            useFactory: (entityManager: EntityManager) => {
+                const userRepositoryStorage = new UserRepositoryStorage(entityManager)
+                return new SignUpUseCase(userRepositoryStorage)
+            }, inject: [EntityManager]
         }
     ],
-    controllers: [SiginController]
+    controllers: [
+        SiginController,
+        SignupController
+    ]
 })
 
 export class AuthModule { }

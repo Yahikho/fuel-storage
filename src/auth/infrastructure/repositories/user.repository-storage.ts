@@ -25,15 +25,13 @@ export class UserRepositoryStorage implements UserRepository {
         `)
 
         return result
+    }
 
-        /*const userCreated = await this.userEntity
-            .createQueryBuilder()
-            .insert()
-            .into(User)
-            .values({ ...user })
-            .returning('*')
-            .execute()
+    async findByUserOrEmail(username: string, email: string): Promise<number> {
 
-        return userCreated.raw*/
+        const result: [{ total: number }] = await this.maganer.query(`
+            SELECT dbo.ValidaUniqueUser('${username}', '${email}') AS total
+        `)
+        return result[0].total
     }
 }
