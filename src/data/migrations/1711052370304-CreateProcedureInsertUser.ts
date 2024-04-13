@@ -18,7 +18,7 @@ export class InsertUserSP1711052370304 implements MigrationInterface {
             DECLARE @idUserCreated INT;
             SET @idUserCreated = SCOPE_IDENTITY();
         
-            SELECT user_name,email,avatar FROM dbo.[user] WHERE id = @idUserCreated;
+            SELECT id,user_name,email,avatar FROM dbo.[user] WHERE id = @idUserCreated;
         
         END 
         `)

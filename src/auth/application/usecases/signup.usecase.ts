@@ -26,11 +26,21 @@ export class SignUpUseCase {
                 user.email = user.email.toLocaleLowerCase()
                 const userCreated = await this.userRepository.create(user)
                 if (userCreated) {
-                    return {
-                        code: HttpStatus.CREATED,
-                        response: true,
-                        message: 'User has be created'
+                    const createCodeEmailVerified = await this.userRepository.createCodeEmailVerified(userCreated.id)
+                    if (createCodeEmailVerified) {
+                        return {
+                            code: HttpStatus.CREATED,
+                            response: true,
+                            message: 'User has be created'
+                        }
+                    } else {
+                        return {
+                            code: HttpStatus.INTERNAL_SERVER_ERROR,
+                            response: false,
+                            message: 'Error to geneted code email verified.'
+                        }
                     }
+
                 } else {
                     return {
                         code: HttpStatus.CONFLICT,
@@ -40,6 +50,7 @@ export class SignUpUseCase {
                 }
             }
         } catch (err) {
+            console.error(err)
             throw new HttpException({
                 response: false,
                 message: 'Erro -> SignUpUseCase'

@@ -5,6 +5,7 @@ import { UserOutputModel } from "src/auth/domain/models/user-output.model";
 import { UserModel } from "src/auth/domain/models/user.model";
 import { EntityManager } from "typeorm";
 import { UserRepository } from "src/auth/domain/repositories/user.respository";
+import { EmailVerifiedModel } from "src/auth/domain/models/email-verified.model";
 
 export class UserRepositoryStorage implements UserRepository {
 
@@ -20,11 +21,10 @@ export class UserRepositoryStorage implements UserRepository {
 
     async create(user: UserCreatenModel): Promise<UserOutputModel> {
 
-        const result: UserOutputModel = await this.maganer.query(`
+        const result = await this.maganer.query(`
             EXEC [dbo].[InsertUser] '${user.user_name}','${user.email}','${user.password}', '${user.avatar}'
         `)
-
-        return result
+        return result[0]
     }
 
     async findByUserOrEmail(username: string, email: string): Promise<number> {
@@ -33,5 +33,13 @@ export class UserRepositoryStorage implements UserRepository {
             SELECT dbo.ValidaUniqueUser('${username}', '${email}') AS total
         `)
         return result[0].total
+    }
+
+    async createCodeEmailVerified(id: number): Promise<EmailVerifiedModel> {
+        const result = await this.maganer.query(`
+            EXEC dbo.CreateCodeEmailVerified ${id}
+        `)
+
+        return result[0]
     }
 }
