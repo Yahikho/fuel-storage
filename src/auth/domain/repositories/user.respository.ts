@@ -9,4 +9,5 @@ export interface UserRepository {
     findByUser(user: UserSiginModel): Promise<UserModel>
     findByUserOrEmail(username: string, email: string): Promise<number>
     createCodeEmailVerified(id: number): Promise<EmailVerifiedModel>
+    validaEmailByUser(code: number, iduser: number): Promise<number>
 }

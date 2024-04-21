@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { SiginController } from "./infrastructure/controllers/singin.controller";
+import { SigninController } from "./infrastructure/controllers/singin.controller";
 import { SignInUseCase } from "./application/usecases/signin.usecase";
 import { UserRepositoryStorage } from "./infrastructure/repositories/user.repository-storage";
 import { EntityManager } from "typeorm";
@@ -10,6 +10,8 @@ import { JwtStrategy } from "src/shared/strategies/jwt.strategy";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { SignupController } from "./infrastructure/controllers/singup.controller";
 import { SignUpUseCase } from "./application/usecases/signup.usecase";
+import { EmailVerifiedController } from "./infrastructure/controllers/email-verified.controller";
+import { EmailVerifiedUseCase } from "./application/usecases/email-verified.usecase";
 
 @Module({
     imports: [
@@ -45,11 +47,19 @@ import { SignUpUseCase } from "./application/usecases/signup.usecase";
                 const userRepositoryStorage = new UserRepositoryStorage(entityManager)
                 return new SignUpUseCase(userRepositoryStorage)
             }, inject: [EntityManager]
+        },
+        {
+            provide: EmailVerifiedUseCase,
+            useFactory: (entityManager: EntityManager) => {
+                const userRepositoryStorage = new UserRepositoryStorage(entityManager)
+                return new EmailVerifiedUseCase(userRepositoryStorage)
+            }, inject: [EntityManager]
         }
     ],
     controllers: [
-        SiginController,
-        SignupController
+        SigninController,
+        SignupController,
+        EmailVerifiedController,
     ]
 })
 

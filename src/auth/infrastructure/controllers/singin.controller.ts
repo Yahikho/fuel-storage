@@ -6,7 +6,7 @@ import { SigInDto } from "../dto/sigin.dto";
 
 @ApiTags('auth/signin')
 @Controller('auth')
-export class SiginController {
+export class SigninController {
 
     constructor(private readonly signInUseCase: SignInUseCase) { }
 

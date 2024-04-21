@@ -20,12 +20,13 @@ export class SignInUseCase {
             const user = await this.userRepository.findByUser(userInput)
 
             if (user) {
-                if (UserVerified.execute(user)) {
-                    const authService = new AuthService(this.jwtService)
 
-                    const data = await authService.signin(user)
+                const authService = new AuthService(this.jwtService)
 
-                    if (data) {
+                const data = await authService.signin(user)
+
+                if (data) {
+                    if (UserVerified.execute(user)) {
                         return {
                             code: HttpStatus.OK,
                             response: true,
@@ -34,14 +35,19 @@ export class SignInUseCase {
                                 access_token: data.access_token
                             }
                         }
-                    }
-                } else {
-                    return {
-                        code: HttpStatus.UNAUTHORIZED,
-                        response: true,
-                        message: 'User needs to be validated.'
+
+                    } else {
+                        return {
+                            code: HttpStatus.UNAUTHORIZED,
+                            response: true,
+                            message: 'User needs to be validated.',
+                            data: {
+                                access_token: data.access_token
+                            }
+                        }
                     }
                 }
+
             } else {
                 return {
                     code: HttpStatus.UNAUTHORIZED,
