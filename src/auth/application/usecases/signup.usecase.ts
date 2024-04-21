@@ -37,10 +37,10 @@ export class SignUpUseCase {
                         return {
                             code: HttpStatus.INTERNAL_SERVER_ERROR,
                             response: false,
-                            message: 'Error to geneted code email verified.'
+                            message: 'Error to generated code email verified.'
                         }
                     }
-
+                    
                 } else {
                     return {
                         code: HttpStatus.CONFLICT,

@@ -10,4 +10,5 @@ export interface UserRepository {
     findByUserOrEmail(username: string, email: string): Promise<number>
     createCodeEmailVerified(id: number): Promise<EmailVerifiedModel>
     validaEmailByUser(code: number, iduser: number): Promise<number>
+    getByUser(code: number, id: number): Promise<EmailVerifiedModel>
 }
