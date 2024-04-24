@@ -4,43 +4,41 @@ export class CreateProcedureValidaEmailByUser1713026346129 implements MigrationI
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-        CREATE PROCEDURE ValidaEmailByUser(
+        CREATE PROCEDURE [dbo].[ValidaEmailByUser](
             @code INT,
-            @idUser INT
+            @idUser INT,
+            @isValid INT OUTPUT
         )
         AS
         BEGIN
-                
-            DECLARE @valid INT;
+            DECLARE @rowCount INT;
         
-            DELETE FROM dbo.email_verified WHERE user_id = @idUser
-            AND code = @code;
-            
-            IF @@ROWCOUNT > 0
+            DELETE FROM dbo.email_verified WHERE user_id = @idUser AND code = @code;
+            SET @rowCount = @@ROWCOUNT;
+        
+            IF @rowCount > 0
             BEGIN
-                SET @valid = 1
+                SET @isValid = 1;
             END
             ELSE
             BEGIN
-                SET @valid = 0
+                SET @isValid = 0;
             END
         
-            IF @valid = 1
+            IF @isValid = 1
             BEGIN
-                UPDATE dbo.[user] SET verified = 1 
-                WHERE id = @idUser;
+                UPDATE dbo.[user] SET verified = 1 WHERE id = @idUser;
+                SET @rowCount = @@ROWCOUNT;
         
-                IF @@ROWCOUNT > 0
+                IF @rowCount > 0
                 BEGIN
-                    SET @valid = 1
+                    SET @isValid = 1;
                 END
                 ELSE
                 BEGIN
-                    SET @valid = 0
+                    SET @isValid = 0;
                 END
             END
-        
-            RETURN @valid
         END
         `)
     }

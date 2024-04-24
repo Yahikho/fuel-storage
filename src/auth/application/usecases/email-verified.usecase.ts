@@ -15,9 +15,7 @@ export class EmailVerifiedUseCase {
 
             if(isValidEmailVerified){
                 const resultEmailVerified = await this.userRepository.validaEmailByUser(code, iduser)
-
-                console.log(code)
-                console.log(iduser)
+                
                 if(resultEmailVerified){
                     return {
                         code: HttpStatus.CREATED,

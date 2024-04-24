@@ -45,18 +45,17 @@ export class UserRepositoryStorage implements UserRepository {
 
     async validaEmailByUser(code: number, iduser: number): Promise<number> {
         const result = await this.maganer.query(`
-            EXEC dbo.ValidaEmailByUser ${code}, ${iduser}
+            DECLARE @isValidResult INT;
+            EXEC dbo.ValidaEmailByUser @code = ${code}, @idUser = ${iduser}, @isValid = @isValidResult OUTPUT;
+            SELECT @isValidResult AS IsValid;
         `)
-
-        return result[0]
+        return result[0].IsValid
     }
 
     async getByUser(code: number, id: number): Promise<EmailVerifiedModel> {
         const result = await this.maganer.query(`
             SELECT * FROM GetByUser(${id}, ${code});
         `)
-
-        console.log(result)
         return result[0]
     }
 }
