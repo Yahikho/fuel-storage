@@ -3,8 +3,8 @@ import { UserRepository } from "src/auth/domain/repositories/user.respository";
 import { AuthService } from "../services/auth.service";
 import { UserSiginModel } from "src/auth/domain/models/user-sigin.model";
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { CryptPassword } from "src/shared/config/crypt-password";
-import { UserVerified } from "src/auth/domain/services/user-verified.service";
+import { CryptPassword } from "../../../shared/config/crypt-password";
+import { UserVerified } from "../../domain/services/user-verified.service"
 
 export class SignInUseCase {
 

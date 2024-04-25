@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { UserCreatenModel } from "src/auth/domain/models/user-create.model";
-import { UserRepository } from "src/auth/domain/repositories/user.respository";
-import { CryptPassword } from "src/shared/config/crypt-password";
+import { UserCreatenModel } from "../../domain/models/user-create.model";
+import { UserRepository } from "../../domain/repositories/user.respository";
+import { CryptPassword } from "../../../shared/config/crypt-password";
 
 @Injectable()
 

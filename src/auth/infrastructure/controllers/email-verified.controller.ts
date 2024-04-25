@@ -2,10 +2,9 @@ import { Body, Controller, Post, Res, UseGuards } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
 import { EmailVerifiedDto } from "../dto/email-verified.dto";
-import { EmailVerifiedUseCase } from "src/auth/application/usecases/email-verified.usecase";
-import { CurrentUserDecorator } from "src/shared/docorators/CurrentUser.decorator";
-import { UserModel } from "src/auth/domain/models/user.model";
-import { JwtAuthGuard } from "src/shared/guards/jwt-auth.guard";
+import { EmailVerifiedUseCase } from "../../application/usecases/email-verified.usecase";
+import { CurrentUserDecorator } from "../../../shared/docorators/CurrentUser.decorator";
+import { JwtAuthGuard } from "../../../shared/guards/jwt-auth.guard";
 
 @ApiTags('auth/email-verified')
 @Controller('auth')

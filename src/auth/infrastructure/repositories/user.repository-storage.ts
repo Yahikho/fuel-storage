@@ -1,11 +1,11 @@
 import { InjectEntityManager } from "@nestjs/typeorm";
-import { UserCreatenModel } from "src/auth/domain/models/user-create.model";
-import { UserSiginModel } from "src/auth/domain/models/user-sigin.model";
-import { UserOutputModel } from "src/auth/domain/models/user-output.model";
-import { UserModel } from "src/auth/domain/models/user.model";
+import { UserCreatenModel } from "../../domain/models/user-create.model";
+import { UserSiginModel } from "../../domain/models/user-sigin.model";
+import { UserOutputModel } from "../../domain/models/user-output.model";
+import { UserModel } from "../../domain/models/user.model";
 import { EntityManager } from "typeorm";
-import { UserRepository } from "src/auth/domain/repositories/user.respository";
-import { EmailVerifiedModel } from "src/auth/domain/models/email-verified.model";
+import { UserRepository } from "../../domain/repositories/user.respository";
+import { EmailVerifiedModel } from "../../domain/models/email-verified.model";
 
 export class UserRepositoryStorage implements UserRepository {
 

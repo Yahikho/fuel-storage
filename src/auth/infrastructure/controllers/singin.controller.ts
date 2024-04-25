@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res } from "@nestjs/common";
-import { ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
-import { SignInUseCase } from "src/auth/application/usecases/signin.usecase";
+import { SignInUseCase } from "../../application/usecases/signin.usecase";
 import { SigInDto } from "../dto/sigin.dto";
 
 @ApiTags('auth/signin')

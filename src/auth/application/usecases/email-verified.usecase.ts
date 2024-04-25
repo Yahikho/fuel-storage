@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { UserRepository } from "src/auth/domain/repositories/user.respository";
-import { VerifiedEmailService } from "src/auth/domain/services/verified-email.service"; 
+import { UserRepository } from "../../domain/repositories/user.respository"
+import { VerifiedEmailService } from "../../domain/services/verified-email.service"; 
 
 export class EmailVerifiedUseCase {
 
