@@ -6,7 +6,7 @@ import { UserModel } from "../models/user.model";
 
 export interface UserRepository {
     create(user: UserCreatenModel): Promise<UserOutputModel>
-    findByUser(user: UserSiginModel): Promise<UserModel>
+    findByUser(user: UserSiginModel): Promise<UserModel | null>
     findByUserOrEmail(username: string, email: string): Promise<number>
     createCodeEmailVerified(id: number): Promise<EmailVerifiedModel>
     validaEmailByUser(code: number, iduser: number): Promise<number>

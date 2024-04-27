@@ -38,8 +38,8 @@ export class SignInUseCase {
 
                     } else {
                         return {
-                            code: HttpStatus.UNAUTHORIZED,
-                            response: true,
+                            code: HttpStatus.OK,
+                            response: false,
                             message: 'User needs to be validated.',
                             data: {
                                 access_token: data.access_token

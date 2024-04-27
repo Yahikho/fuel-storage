@@ -16,7 +16,10 @@ export class UserRepositoryStorage implements UserRepository {
         const result: UserModel[] = await this.maganer.query(`
             SELECT * FROM dbo.GetUserBySignin('${user.value}', '${user.password}')
         `)
-        return result[0]
+        if (result) {
+            return result[0]
+        }
+        return null
     }
 
     async create(user: UserCreatenModel): Promise<UserOutputModel> {
