@@ -31,7 +31,11 @@ export class SignUpUseCase {
                         return {
                             code: HttpStatus.CREATED,
                             response: true,
-                            message: 'User has be created'
+                            message: 'User has be created', 
+                            data: {
+                                email: user.email,
+                                code: createCodeEmailVerified.code
+                            }
                         }
                     } else {
                         return {
@@ -40,7 +44,6 @@ export class SignUpUseCase {
                             message: 'Error to generated code email verified.'
                         }
                     }
-                    
                 } else {
                     return {
                         code: HttpStatus.CONFLICT,

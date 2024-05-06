@@ -11,9 +11,9 @@ export class UserRepositoryStorage implements UserRepository {
 
     constructor(@InjectEntityManager() private readonly maganer: EntityManager) { }
 
-    async findByUser(user: UserSiginModel): Promise<UserModel> {
+    async findByUser(user: UserSiginModel): Promise<UserModel | null> {
 
-        const result: UserModel[] = await this.maganer.query(`
+        const result: UserModel[] | null = await this.maganer.query(`
             SELECT * FROM dbo.GetUserBySignin('${user.value}', '${user.password}')
         `)
         if (result) {
@@ -22,12 +22,16 @@ export class UserRepositoryStorage implements UserRepository {
         return null
     }
 
-    async create(user: UserCreatenModel): Promise<UserOutputModel> {
+    async create(user: UserCreatenModel): Promise<UserOutputModel | null> {
 
-        const result = await this.maganer.query(`
+        const result: UserOutputModel[] | null = await this.maganer.query(`
             EXEC [dbo].[InsertUser] '${user.user_name}','${user.email}','${user.password}', '${user.avatar}'
         `)
-        return result[0]
+
+        if (result) {
+            return result[0]
+        }
+        return null
     }
 
     async findByUserOrEmail(username: string, email: string): Promise<number> {
@@ -42,7 +46,6 @@ export class UserRepositoryStorage implements UserRepository {
         const result = await this.maganer.query(`
             EXEC dbo.CreateCodeEmailVerified ${id}
         `)
-
         return result[0]
     }
 
@@ -52,6 +55,7 @@ export class UserRepositoryStorage implements UserRepository {
             EXEC dbo.ValidaEmailByUser @code = ${code}, @idUser = ${iduser}, @isValid = @isValidResult OUTPUT;
             SELECT @isValidResult AS IsValid;
         `)
+
         return result[0].IsValid
     }
 

@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configEnvironment from './shared/config/config.environment';
 import { AuthModule } from './auth/auth.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -32,6 +33,22 @@ import { AuthModule } from './auth/auth.module';
       }),
       inject: [ConfigService]
     }),
+
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        transport: {
+          host: configService.get<string>('EMAIL_HOST'),
+          port: configService.get<number>('EMAIL_PORT'),
+          secure: false,
+          auth: {
+            user: configService.get<string>('EMAIL_USER'),
+            pass: configService.get<string>('EMAIL_PASS'),
+          }
+        }
+      }),
+      inject: [ConfigService]
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
