@@ -3,6 +3,8 @@ import { UserCreatenModel } from "../../domain/models/user-create.model";
 import { UserRepository } from "../../domain/repositories/user.respository";
 import { CryptPassword } from "../../../shared/config/crypt-password";
 import { SingUpUserAWSService } from "src/auth/infrastructure/services/signup-user-aws.service";
+import { CreateBucketAWSService } from "src/auth/infrastructure/services/create-bucket-aws.service";
+import { CreatePolicyAWSService } from "src/auth/infrastructure/services/create-policy-aws.service";
 
 @Injectable()
 
@@ -22,16 +24,13 @@ export class SignUpUseCase {
                     message: 'The username or email is already used.'
                 }
             } else {
-                const singUpUserAWSService = new SingUpUserAWSService(user.user_name)
-                await singUpUserAWSService.signUpUser()
-                const infoUserAWS = await singUpUserAWSService.createAccesKey()
-
-                if (infoUserAWS) {
+                const dataAWS = await this.registerAWS(user.user_name)
+                if (dataAWS.access_key_id_aws && dataAWS.secret_access_key_aws) {
                     user.password = await CryptPassword.hash(user.password)
                     user.user_name = user.user_name.toLocaleLowerCase()
                     user.email = user.email.toLocaleLowerCase()
-                    user.access_key_id_aws = infoUserAWS.AccessKey.AccessKeyId
-                    user.secret_access_key_aws = infoUserAWS.AccessKey.SecretAccessKey
+                    user.access_key_id_aws = dataAWS.access_key_id_aws
+                    user.secret_access_key_aws = dataAWS.secret_access_key_aws
 
                     const userCreated = await this.userRepository.create(user)
                     if (userCreated) {
@@ -68,6 +67,12 @@ export class SignUpUseCase {
                     }
                 }
             }
+
+            return {
+                code: HttpStatus.CREATED,
+                response: true,
+                message: 'User has be created',
+            }
         } catch (err) {
             console.error(err)
             throw new HttpException({
@@ -76,4 +81,39 @@ export class SignUpUseCase {
             }, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
+
+    private async registerAWS(username: string) {
+        const singUpUserAWSService = new SingUpUserAWSService(username)
+        await singUpUserAWSService.signUpUser()
+
+        const infoUserAWS = await singUpUserAWSService.createAccesKey()
+
+        if (infoUserAWS) {
+            const createBucketAWSService = new CreateBucketAWSService(username)
+
+            const createBucket = await createBucketAWSService.createBucket()
+
+            if (createBucket) {
+                const createPolicyAWSService = new CreatePolicyAWSService(username)
+
+                const createPolicy = await createPolicyAWSService.createPolicy()
+
+                const attachPolicy = await createPolicyAWSService.attachPolicy(createPolicy.Policy.Arn)
+
+                if (attachPolicy) {
+                    return {
+                        access_key_id_aws: infoUserAWS.AccessKey.AccessKeyId,
+                        secret_access_key_aws: infoUserAWS.AccessKey.SecretAccessKey
+                    }
+                }
+            }
+
+        }
+
+        return {
+            access_key_id_aws: '',
+            secret_access_key_aws: ''
+        }
+    }
+
 }

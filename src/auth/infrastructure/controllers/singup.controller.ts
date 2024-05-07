@@ -21,17 +21,16 @@ export class SignupController {
         @Res() res: Response,
         @Body() body: SingupDto
     ) {
-        const { code, ...response } = await this.signUpUseCase.execute(body)
-        // const { code, data, ...response } = await this.signUpUseCase.execute(body)
-        // if (code === 201) {
-        //     await this.mailerService.sendMail({
-        //         to: data.email,
-        //         subject: 'Verificaction code',
-        //         html: `<p>Hey, this is your code <strong>${data.code}</strong> to verify your email address.</p>`
-        //     }).catch((err) => {
-        //         console.log(`Error email -> ${err}`)
-        //     })
-        // }
+        const { code, data, ...response } = await this.signUpUseCase.execute(body)
+        if (code === 201) {
+            await this.mailerService.sendMail({
+                to: data.email,
+                subject: 'Verificaction code',
+                html: `<p>Hey, this is your code <strong>${data.code}</strong> to verify your email address.</p>`
+            }).catch((err) => {
+                console.log(`Error email -> ${err}`)
+            })
+        }
 
         res.status(code).json(response)
     }

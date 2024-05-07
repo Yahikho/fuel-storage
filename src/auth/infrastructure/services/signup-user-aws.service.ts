@@ -1,4 +1,4 @@
-import { IAMClient, CreateUserCommand, CreateAccessKeyCommand, AttachUserPolicyCommand, CreateAccessKeyCommandOutput } from "@aws-sdk/client-iam"
+import { IAMClient, CreateUserCommand, CreateAccessKeyCommand, CreateAccessKeyCommandOutput } from "@aws-sdk/client-iam"
 import { ConfigService } from "@nestjs/config"
 
 export class SingUpUserAWSService {
@@ -24,18 +24,14 @@ export class SingUpUserAWSService {
     }
 
     async createAccesKey(): Promise<CreateAccessKeyCommandOutput | null> {
-
-        if (await this.attachPolicy()) {
-            const input = {
-                UserName: this.username
-            }
-            const command = new CreateAccessKeyCommand(input)
-            const res = await this.client.send(command)
-            if (res) return res
-            return null
+        const input = {
+            UserName: this.username
         }
-
+        const command = new CreateAccessKeyCommand(input)
+        const res = await this.client.send(command)
+        if (res) return res
         return null
+
     }
 
     async signUpUser() {
@@ -47,15 +43,5 @@ export class SingUpUserAWSService {
         await this.client.send(command)
     }
 
-    private async attachPolicy() {
-        const params = {
-            UserName: this.username,
-            PolicyArn: this.configService.get<string>('AWS_POLICY_ARM_STORAGE_AVATARS')
-        };
-
-        const command = new AttachUserPolicyCommand(params)
-
-        return await this.client.send(command)
-    }
 
 }
