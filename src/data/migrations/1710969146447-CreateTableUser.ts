@@ -11,10 +11,12 @@ export class CreateTableUser1710969146447 implements MigrationInterface {
             password VARCHAR(250) NOT NULL,
             avatar VARCHAR(250) NULL,
             verified BIT NOT NULL DEFAULT 0,
+			access_key_id_aws VARCHAR(25) NOT NULL,
+			secret_access_key_aws VARCHAR(100) NOT NULL,
+			arn_bucket_aws VARCHAR(200) NULL,
             created_at DATETIME2 DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME2 NULL
         );
-        
         `)
     }
 

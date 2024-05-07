@@ -24,6 +24,7 @@
     "typeorm:revert": "SET NODE_ENV=development&& npm run typeorm migration:revert -- -d ./dist/shared/config/data-source.config.js"
   },
   "dependencies": {
+    "@aws-sdk/client-iam": "^3.569.0",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.0",

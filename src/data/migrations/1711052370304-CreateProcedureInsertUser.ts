@@ -8,12 +8,14 @@ export class InsertUserSP1711052370304 implements MigrationInterface {
             @user_name NVARCHAR(100),
             @email NVARCHAR(100),
             @password NVARCHAR(250),
-            @avatar NVARCHAR(250) = NULL)
+			@accessKeyIdAWS NVARCHAR(25),
+			@secretAccessKeyAWS NVARCHAR(100)
+			)
         AS
             BEGIN 
         
-            INSERT INTO dbo.[user] (user_name,email,password,avatar)
-            VALUES (@user_name,@email,@password,@avatar);
+            INSERT INTO dbo.[user] (user_name,email,password,access_key_id_aws,secret_access_key_aws)
+            VALUES (@user_name,@email,@password,@accessKeyIdAWS,@secretAccessKeyAWS);
         
             DECLARE @idUserCreated INT;
             SET @idUserCreated = SCOPE_IDENTITY();

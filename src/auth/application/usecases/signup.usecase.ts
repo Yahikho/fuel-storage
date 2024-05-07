@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserCreatenModel } from "../../domain/models/user-create.model";
 import { UserRepository } from "../../domain/repositories/user.respository";
 import { CryptPassword } from "../../../shared/config/crypt-password";
+import { SingUpUserAWSService } from "src/auth/infrastructure/services/signup-user-aws.service";
 
 @Injectable()
 
@@ -21,34 +22,49 @@ export class SignUpUseCase {
                     message: 'The username or email is already used.'
                 }
             } else {
-                user.password = await CryptPassword.hash(user.password)
-                user.user_name = user.user_name.toLocaleLowerCase()
-                user.email = user.email.toLocaleLowerCase()
-                const userCreated = await this.userRepository.create(user)
-                if (userCreated) {
-                    const createCodeEmailVerified = await this.userRepository.createCodeEmailVerified(userCreated.id)
-                    if (createCodeEmailVerified) {
-                        return {
-                            code: HttpStatus.CREATED,
-                            response: true,
-                            message: 'User has be created', 
-                            data: {
-                                email: user.email,
-                                code: createCodeEmailVerified.code
+                const singUpUserAWSService = new SingUpUserAWSService(user.user_name)
+                await singUpUserAWSService.signUpUser()
+                const infoUserAWS = await singUpUserAWSService.createAccesKey()
+
+                if (infoUserAWS) {
+                    user.password = await CryptPassword.hash(user.password)
+                    user.user_name = user.user_name.toLocaleLowerCase()
+                    user.email = user.email.toLocaleLowerCase()
+                    user.access_key_id_aws = infoUserAWS.AccessKey.AccessKeyId
+                    user.secret_access_key_aws = infoUserAWS.AccessKey.SecretAccessKey
+
+                    const userCreated = await this.userRepository.create(user)
+                    if (userCreated) {
+                        const createCodeEmailVerified = await this.userRepository.createCodeEmailVerified(userCreated.id)
+                        if (createCodeEmailVerified) {
+                            return {
+                                code: HttpStatus.CREATED,
+                                response: true,
+                                message: 'User has be created',
+                                data: {
+                                    email: user.email,
+                                    code: createCodeEmailVerified.code
+                                }
+                            }
+                        } else {
+                            return {
+                                code: HttpStatus.INTERNAL_SERVER_ERROR,
+                                response: false,
+                                message: 'Error to generated code email verified.'
                             }
                         }
                     } else {
                         return {
-                            code: HttpStatus.INTERNAL_SERVER_ERROR,
+                            code: HttpStatus.CONFLICT,
                             response: false,
-                            message: 'Error to generated code email verified.'
+                            message: 'The user was not created, try again.'
                         }
                     }
                 } else {
                     return {
-                        code: HttpStatus.CONFLICT,
+                        code: HttpStatus.INTERNAL_SERVER_ERROR,
                         response: false,
-                        message: 'The user was not created, try again.'
+                        message: 'Error with AWS.'
                     }
                 }
             }
