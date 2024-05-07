@@ -29,6 +29,7 @@ export class SignUpUseCase {
                     user.password = await CryptPassword.hash(user.password)
                     user.user_name = user.user_name.toLocaleLowerCase()
                     user.email = user.email.toLocaleLowerCase()
+
                     user.access_key_id_aws = dataAWS.access_key_id_aws
                     user.secret_access_key_aws = dataAWS.secret_access_key_aws
 
@@ -67,17 +68,11 @@ export class SignUpUseCase {
                     }
                 }
             }
-
-            return {
-                code: HttpStatus.CREATED,
-                response: true,
-                message: 'User has be created',
-            }
         } catch (err) {
             console.error(err)
             throw new HttpException({
                 response: false,
-                message: 'Erro -> SignUpUseCase'
+                message: 'Error -> SignUpUseCase'
             }, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
@@ -103,7 +98,7 @@ export class SignUpUseCase {
                 if (attachPolicy) {
                     return {
                         access_key_id_aws: infoUserAWS.AccessKey.AccessKeyId,
-                        secret_access_key_aws: infoUserAWS.AccessKey.SecretAccessKey
+                        secret_access_key_aws: infoUserAWS.AccessKey.SecretAccessKey,
                     }
                 }
             }
@@ -112,7 +107,7 @@ export class SignUpUseCase {
 
         return {
             access_key_id_aws: '',
-            secret_access_key_aws: ''
+            secret_access_key_aws: '',
         }
     }
 

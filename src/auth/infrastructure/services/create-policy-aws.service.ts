@@ -79,7 +79,7 @@ export class CreatePolicyAWSService {
 
         const command = new AttachUserPolicyCommand(params);
 
-        if (await this.client.send(command)) return true
+        if(await this.client.send(command)) return true
         return false
     }
 }

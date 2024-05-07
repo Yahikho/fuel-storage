@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configEnvironment from './shared/config/config.environment';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { AWSS3Module } from './aws-s3/aws-s3.module';
 
 @Module({
   imports: [
@@ -48,7 +49,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
         }
       }),
       inject: [ConfigService]
-    })
+    }),
+    AWSS3Module
   ],
   controllers: [AppController],
   providers: [AppService],
