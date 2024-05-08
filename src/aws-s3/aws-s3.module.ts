@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { UploadFileController } from "./infrastructure/controllers/uploap-file.controller";
-import { CreateObjectUseCase } from "./application/creeate-object.usecase";
+import { NewObjectController } from "./infrastructure/controllers/new-object.controller";
+import { CreateObjectUseCase } from "./application/create-object.usecase";
 import { UserRepositoryStorage } from "./infrastructure/repositories/user.respository-storage";
 import { EntityManager } from "typeorm";
 
@@ -15,7 +15,7 @@ import { EntityManager } from "typeorm";
             }, inject: [EntityManager]
         }
     ],
-    controllers: [UploadFileController]
+    controllers: [NewObjectController]
 })
 
 export class AWSS3Module { }
