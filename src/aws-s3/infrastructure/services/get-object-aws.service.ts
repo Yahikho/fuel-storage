@@ -12,7 +12,7 @@ export class GetObjectAwsService {
         this.credentialsAWS = credentialsAWS
         this.configService = new ConfigService();
         this.client = new S3Client({
-            //User credentials other than AWS root user
+            //User credentials other that AWS root user
             region: this.configService.get<string>('AWS_REGION'),
             credentials: {
                 accessKeyId: this.credentialsAWS.access_key_id_aws,

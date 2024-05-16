@@ -11,16 +11,29 @@ export class CreateObjectUseCase {
             const credentialsAWS = await this.userRepository.getUserById(userId)
 
             const putObjectAWSService = new PutObjectAWSService(credentialsAWS)
-            const res = await putObjectAWSService.putObject(files[0], folder)
 
+            let objectCreated = true
+            for (const file of files) {
+                const res = await putObjectAWSService.putObject(file, folder)
+                if (!res) {
+                    objectCreated = false
+                    break
+                }
+            }
 
+            if (objectCreated) {
+                return {
+                    code: HttpStatus.OK,
+                    response: true,
+                    message: 'Ok'
+                }
+            }
             return {
-                code: HttpStatus.OK,
-                response: true,
-                message: 'Ok'
+                code: HttpStatus.INTERNAL_SERVER_ERROR,
+                response: false,
+                message: 'Error to created Object.'
             }
         } catch (err) {
-            console.log(err)
             throw new HttpException({
                 response: false,
                 message: 'Error -> CreateObjectUseCase'
