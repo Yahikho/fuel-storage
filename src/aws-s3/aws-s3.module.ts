@@ -6,6 +6,7 @@ import { EntityManager } from "typeorm";
 import { GetObjectController } from "./infrastructure/controllers/get-object.controller";
 import { ListObjectController } from "./infrastructure/controllers/list-object.controller";
 import { ListObjectUseCase } from "./application/list-object.usecase";
+import { GetObjectUseCase } from "./application/get-object.usecase";
 
 @Module({
     providers: [
@@ -15,6 +16,13 @@ import { ListObjectUseCase } from "./application/list-object.usecase";
             useFactory: (entityManager: EntityManager) => {
                 const userRepositoryStorage = new UserRepositoryStorage(entityManager)
                 return new CreateObjectUseCase(userRepositoryStorage)
+            }, inject: [EntityManager]
+        },
+        {
+            provide: GetObjectUseCase,
+            useFactory: (entityManager: EntityManager) => {
+                const userRepositoryStorage = new UserRepositoryStorage(entityManager)
+                return new GetObjectUseCase(userRepositoryStorage)
             }, inject: [EntityManager]
         },
         {

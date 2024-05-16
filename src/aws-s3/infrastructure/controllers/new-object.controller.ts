@@ -7,14 +7,14 @@ import { Response } from "express";
 import { CurrentUserDecorator } from "../../../shared/docorators/CurrentUser.decorator";
 import { NewObjectDto } from "../dto/new-object.dto";
 
-@ApiTags('aws-s3/new-abject')
+@ApiTags('aws-s3/new-object')
 @Controller('aws-s3')
 export class NewObjectController {
 
     constructor(private readonly createObjectUseCase: CreateObjectUseCase) { }
 
     @ApiBody({ description: 'Upload files and folder property', type: NewObjectDto })
-    @Post('new-abject')
+    @Post('new-object')
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FilesInterceptor('files'))
     async UploadFile(

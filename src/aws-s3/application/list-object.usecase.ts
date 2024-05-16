@@ -15,11 +15,11 @@ export class ListObjectUseCase {
 
             const res = await getObjectAwsService.listOfObject(prefix)
 
-            console.log(res)
             return {
                 code: HttpStatus.OK,
                 response: true,
-                message: 'ok'
+                message: '',
+                data: res.Contents
             }
         } catch (err) {
             throw new HttpException({
