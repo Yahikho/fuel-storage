@@ -14,8 +14,6 @@ When the user registers in the APP, this service creates a user in AWS-IAM and c
 ### To clone this repo
 - Configure AWS CLI with an ADMIN user, this user must have permissions to create buckets and and user in AWS (IM).
 > Important, is not recommend use the root user in a external application AWS.
-- Configure environment variables in ``.env`` file.
-> Important, this app use JWT, so you will should assign secret key.
 - Clone this repo
 ```
 git clone https://github.com/Yahikho/fuel-storage.git
@@ -24,6 +22,8 @@ git clone https://github.com/Yahikho/fuel-storage.git
 ```
 npm install
 ```
+- Configure environment variables in ``.env`` file.
+> Important, this app use JWT, so you will should assign secret key.
 - Run migrations from TypeORM
  ```
  npm run typeorm:run
