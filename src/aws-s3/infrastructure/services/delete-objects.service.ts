@@ -1,4 +1,4 @@
-import { S3Client } from "@aws-sdk/client-s3"
+import { S3Client, DeleteObjectsCommand } from "@aws-sdk/client-s3"
 import { ConfigService } from "@nestjs/config"
 import { KeysAccessAWSDto } from "src/aws-s3/domain/models/keys-access-aws.dto"
 
@@ -20,6 +20,17 @@ export class DeleteObjectsService {
         })
     }
 
-    
 
+    async deleteObject(Objects: Array<{ Key: string }>) {
+        const input = {
+            Bucket: this.credentialsAWS.user_name,
+            Delete: {
+                Objects
+            },
+            "Quiet": false
+        }
+
+        const command = new DeleteObjectsCommand(input);
+        return await this.client.send(command);
+    }
 }

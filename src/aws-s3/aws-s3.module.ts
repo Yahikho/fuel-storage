@@ -7,6 +7,8 @@ import { GetObjectController } from "./infrastructure/controllers/get-object.con
 import { ListObjectController } from "./infrastructure/controllers/list-object.controller";
 import { ListObjectUseCase } from "./application/list-object.usecase";
 import { GetObjectUseCase } from "./application/get-object.usecase";
+import { DeleteObjectsController } from "./infrastructure/controllers/delete-objectS.controller";
+import { DeleteObjectsUseCase } from "./application/delete-objects.useCase";
 
 @Module({
     providers: [
@@ -31,12 +33,21 @@ import { GetObjectUseCase } from "./application/get-object.usecase";
                 const userRepositoryStorage = new UserRepositoryStorage(entityManager)
                 return new ListObjectUseCase(userRepositoryStorage)
             }, inject: [EntityManager]
+        },
+        {
+            provide: DeleteObjectsUseCase,
+            useFactory: (entityManager: EntityManager) => {
+                const userRepositoryStorage = new UserRepositoryStorage(entityManager)
+                return new DeleteObjectsUseCase(userRepositoryStorage)
+            }, inject: [EntityManager]
         }
     ],
     controllers: [
         NewObjectController,
         GetObjectController,
-        ListObjectController
+        ListObjectController,
+        DeleteObjectsController,
+
     ]
 })
 
