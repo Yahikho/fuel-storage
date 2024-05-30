@@ -43,10 +43,13 @@ import { EmailVerifiedUseCase } from "./application/usecases/email-verified.usec
         },
         {
             provide: SignUpUseCase,
-            useFactory: (entityManager: EntityManager) => {
+            useFactory: (
+                entityManager: EntityManager,
+                jwtService: JwtService
+            ) => {
                 const userRepositoryStorage = new UserRepositoryStorage(entityManager)
-                return new SignUpUseCase(userRepositoryStorage)
-            }, inject: [EntityManager]
+                return new SignUpUseCase(userRepositoryStorage, jwtService)
+            }, inject: [EntityManager, JwtService]
         },
         {
             provide: EmailVerifiedUseCase,

@@ -5,6 +5,8 @@ import { CryptPassword } from "../../../shared/config/crypt-password";
 import { SingUpUserAWSService } from "src/auth/infrastructure/services/signup-user-aws.service";
 import { CreateBucketAWSService } from "src/auth/infrastructure/services/create-bucket-aws.service";
 import { CreatePolicyAWSService } from "src/auth/infrastructure/services/create-policy-aws.service";
+import { SignInUseCase } from "./signin.usecase";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 
@@ -12,10 +14,12 @@ export class SignUpUseCase {
 
     constructor(
         private readonly userRepository: UserRepository,
+        private readonly jwtService: JwtService,
     ) { }
 
     async execute(user: UserCreatenModel) {
         try {
+            const password = user.password
             const userExist = await this.userRepository.findByUserOrEmail(user.user_name, user.email)
             if (userExist) {
                 return {
@@ -36,14 +40,33 @@ export class SignUpUseCase {
                     const userCreated = await this.userRepository.create(user)
                     if (userCreated) {
                         const createCodeEmailVerified = await this.userRepository.createCodeEmailVerified(userCreated.id)
+
                         if (createCodeEmailVerified) {
-                            return {
-                                code: HttpStatus.CREATED,
-                                response: true,
-                                message: 'User has be created',
-                                data: {
-                                    email: user.email,
-                                    code: createCodeEmailVerified.code
+
+                            const signin = new SignInUseCase(this.userRepository, this.jwtService)
+
+                            const login = await signin.execute({ value: user.email, password: password })
+
+                            console.log(login)
+
+                            if (login.data.access_token) {
+                                return {
+                                    code: HttpStatus.CREATED,
+                                    response: true,
+                                    message: 'User has be created',
+                                    data: {
+                                        email: user.email,
+                                        code: createCodeEmailVerified.code
+                                    },
+                                    signin: {
+                                        access_token: login.data.access_token
+                                    }
+                                }
+                            } else {
+                                return {
+                                    code: HttpStatus.INTERNAL_SERVER_ERROR,
+                                    response: false,
+                                    message: 'Error to create access_token.'
                                 }
                             }
                         } else {
