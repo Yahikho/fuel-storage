@@ -42,31 +42,13 @@ export class SignUpUseCase {
                         const createCodeEmailVerified = await this.userRepository.createCodeEmailVerified(userCreated.id)
 
                         if (createCodeEmailVerified) {
-
-                            const signin = new SignInUseCase(this.userRepository, this.jwtService)
-
-                            const login = await signin.execute({ value: user.email, password: password })
-
-                            console.log(login)
-
-                            if (login.data.access_token) {
-                                return {
-                                    code: HttpStatus.CREATED,
-                                    response: true,
-                                    message: 'User has be created',
-                                    data: {
-                                        email: user.email,
-                                        code: createCodeEmailVerified.code
-                                    },
-                                    signin: {
-                                        access_token: login.data.access_token
-                                    }
-                                }
-                            } else {
-                                return {
-                                    code: HttpStatus.INTERNAL_SERVER_ERROR,
-                                    response: false,
-                                    message: 'Error to create access_token.'
+                            return {
+                                code: HttpStatus.CREATED,
+                                response: true,
+                                message: 'User has be created',
+                                data: {
+                                    email: user.email,
+                                    code: createCodeEmailVerified.code
                                 }
                             }
                         } else {
@@ -92,7 +74,6 @@ export class SignUpUseCase {
                 }
             }
         } catch (err) {
-            console.error(err)
             throw new HttpException({
                 response: false,
                 message: 'Error -> SignUpUseCase'

@@ -18,8 +18,6 @@ export class SignInUseCase {
             userInput.password = await CryptPassword.hash(userInput.password)
 
             const user = await this.userRepository.findByUser(userInput)
-            console.log(userInput)
-            console.log(user)
             if (user) {
 
                 const authService = new AuthService(this.jwtService)

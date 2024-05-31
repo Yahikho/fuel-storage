@@ -3,8 +3,6 @@ import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
 import { EmailVerifiedDto } from "../dto/email-verified.dto";
 import { EmailVerifiedUseCase } from "../../application/usecases/email-verified.usecase";
-import { CurrentUserDecorator } from "../../../shared/docorators/CurrentUser.decorator";
-import { JwtAuthGuard } from "../../../shared/guards/jwt-auth.guard";
 
 @ApiTags('auth/email-verified')
 @Controller('auth')
@@ -14,13 +12,11 @@ export class EmailVerifiedController {
 
     @ApiBody({ type: EmailVerifiedDto, description: 'Valida email user' })
     @Post('email-verified')
-    @UseGuards(JwtAuthGuard)
     async emailVerified(
         @Res() res: Response,
         @Body() body: EmailVerifiedDto,
-        @CurrentUserDecorator() userid: { userId: number }
     ) {
-        const { code, ...response } = await this.emailVerifiedUseCase.execute(body.code, userid.userId)
+        const { code, ...response } = await this.emailVerifiedUseCase.execute(body.code)
         res.status(code).json(response)
     }
 }

@@ -59,9 +59,9 @@ export class UserRepositoryStorage implements UserRepository {
         return result[0].IsValid
     }
 
-    async getByUser(code: number, id: number): Promise<EmailVerifiedModel> {
+    async getByUser(code: number): Promise<EmailVerifiedModel> {
         const result = await this.maganer.query(`
-            SELECT * FROM GetByUser(${id}, ${code});
+            SELECT * FROM GetByUser(${code});
         `)
         return result[0]
     }
