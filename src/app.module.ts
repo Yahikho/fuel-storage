@@ -7,6 +7,7 @@ import configEnvironment from './shared/config/config.environment';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { AWSS3Module } from './aws-s3/aws-s3.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -50,7 +51,8 @@ import { AWSS3Module } from './aws-s3/aws-s3.module';
       }),
       inject: [ConfigService]
     }),
-    AWSS3Module
+    AWSS3Module,
+    ProfileModule
   ],
   controllers: [AppController],
   providers: [AppService],
