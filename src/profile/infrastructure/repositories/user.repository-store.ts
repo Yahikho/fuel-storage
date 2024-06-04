@@ -1,7 +1,8 @@
-import { EmailVerifiedModel } from "src/profile/domain/models/user-update.model";
+import { EmailVerifiedModel } from "src/profile/domain/models/user-update.dto";
 import { ProfileRepository } from "../../domain/repositories/profile.repository";
 import { InjectEntityManager } from "@nestjs/typeorm";
 import { EntityManager } from "typeorm";
+import { UserModel } from "../../domain/models/user.model";
 
 export class UserRepositoryStorage implements ProfileRepository {
 
@@ -14,8 +15,17 @@ export class UserRepositoryStorage implements ProfileRepository {
             SELECT @isValidResult AS IsValid;
         `)
 
-        console.log(result)
 
         return result[0]
+    }
+
+    async getUserById(id: number): Promise<UserModel | null> {
+        const result = await this.manager.query(`
+            SELECT * FROM dbo.GetUserById(${id})
+        `)
+        if (result) {
+            return result[0]
+        }
+        return null
     }
 }

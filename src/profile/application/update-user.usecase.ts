@@ -1,14 +1,24 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { ProfileRepository } from "../domain/repositories/profile.repository";
-import { EmailVerifiedModel } from "../domain/models/user-update.model";
+import { AddAvatarService } from "../infrastructure/services/add-avatar.service";
+import { UserUpdateInputModel } from "../domain/models/user-update-dto.model";
 
 export class UpdateUserUseCase {
 
     constructor(private readonly profileRepository: ProfileRepository) { }
 
-    async execute(userUpdate: EmailVerifiedModel) {
+    async execute(userUpdate: UserUpdateInputModel, file: Express.Multer.File) {
         try {
-            console.log(userUpdate)
+
+            const user = await this.profileRepository.getUserById(userUpdate.id)
+
+            console.log(user)
+
+            const addAvatarService = new AddAvatarService()
+
+            const uploadFile = await addAvatarService.putObject(file)
+
+            console.log(uploadFile)
 
             return {
                 code: HttpStatus.OK,

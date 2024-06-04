@@ -8,7 +8,7 @@ export class CreateFuntionGetUserById1715117324528 implements MigrationInterface
             @id INT
         )
         RETURNS TABLE
-        RETURN (SELECT user_name,access_key_id_aws, secret_access_key_aws FROM [dbo].[user] WHERE id = @id)
+        RETURN (SELECT * FROM [dbo].[user] WHERE id = @id)
         `)
     }
 

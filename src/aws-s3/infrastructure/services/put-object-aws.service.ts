@@ -1,14 +1,14 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { ConfigService } from "@nestjs/config"
-import { KeysAccessAWSDto } from "../../domain/models/keys-access-aws.dto"
+import { UserModel } from "../../domain/models/user.model"
 
 export class PutObjectAWSService {
 
     private configService: ConfigService
     private client: S3Client
-    private credentialsAWS: KeysAccessAWSDto
+    private credentialsAWS: UserModel
 
-    constructor(credentialsAWS: KeysAccessAWSDto) {
+    constructor(credentialsAWS: UserModel) {
         this.credentialsAWS = credentialsAWS
         this.configService = new ConfigService();
         this.client = new S3Client({

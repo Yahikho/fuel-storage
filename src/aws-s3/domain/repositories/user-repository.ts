@@ -1,5 +1,5 @@
-import { KeysAccessAWSDto } from "../models/keys-access-aws.dto";
+import { UserModel } from "../models/user.model";
 
 export interface UserRepository{
-    getUserById(id: number): Promise<KeysAccessAWSDto | null>
+    getUserById(id: number): Promise<UserModel | null>
 }
