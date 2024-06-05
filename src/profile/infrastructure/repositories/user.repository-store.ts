@@ -11,12 +11,10 @@ export class UserRepositoryStorage implements ProfileRepository {
     async udateUser(userUpdate: EmailVerifiedModel): Promise<number> {
         const result = await this.manager.query(`
             DECLARE @isValidResult INT;
-            EXEC dbo.[UpdateUser] @@userId = ${userUpdate.id}, @@password = ${userUpdate.password}, @@avatar = ${userUpdate.avatar ? userUpdate : null} @isValid = @isValidResult OUTPUT;
-            SELECT @isValidResult AS IsValid;
+            EXEC dbo.UpdateUser @id = ${userUpdate.id}, @password = '${userUpdate.password}', @avatar = '${userUpdate.avatar}', @isUpdate = @isValidResult OUTPUT;
+            SELECT @isValidResult AS IsUpdate;
         `)
-
-
-        return result[0]
+        return result[0].IsUpdate
     }
 
     async getUserById(id: number): Promise<UserModel | null> {

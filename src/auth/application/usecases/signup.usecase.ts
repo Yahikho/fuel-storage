@@ -19,7 +19,6 @@ export class SignUpUseCase {
 
     async execute(user: UserCreatenModel) {
         try {
-            const password = user.password
             const userExist = await this.userRepository.findByUserOrEmail(user.user_name, user.email)
             if (userExist) {
                 return {

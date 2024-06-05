@@ -1,13 +1,14 @@
-import {  PutObjectCommand, S3Client  } from "@aws-sdk/client-s3"
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { ConfigService } from "@nestjs/config"
 
 export class AddAvatarService {
     private readonly client: S3Client
     private readonly configService: ConfigService
+    private nameFile: string
 
-    constructor() {
+    constructor(nameFile: string) {
         this.configService = new ConfigService();
-
+        this.nameFile = nameFile
         this.client = new S3Client({
             //User credentials other than AWS root user
             region: this.configService.get<string>('AWS_REGION'),
@@ -22,10 +23,13 @@ export class AddAvatarService {
         const input = {
             Body: file.buffer,
             Bucket: this.configService.get<string>('AWS_BUCKET_AVATARS'),
-            Key: 'other.jpeg'
+            Key: this.nameFile
         }
 
         const command = new PutObjectCommand(input)
-        return await this.client.send(command)
+        if (await this.client.send(command)) {
+            return `https://${this.configService.get<string>('AWS_BUCKET_AVATARS')}.s3.${this.configService.get<string>('AWS_REGION')}.amazonaws.com/${this.nameFile}`
+        }
+        return null
     }
 }
