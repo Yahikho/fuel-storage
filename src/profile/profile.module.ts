@@ -3,6 +3,8 @@ import { UserRepositoryStorage } from "./infrastructure/repositories/user.reposi
 import { UpdateUserUseCase } from "./application/update-user.usecase";
 import { EntityManager } from "typeorm";
 import { UserUpdateController } from "./infrastructure/controllers/user-update.controller";
+import { GetInfoUserController } from "./infrastructure/controllers/get-info-user.controller";
+import { GetInfoUserCase } from "./application/get-info-user.usecase";
 
 @Module({
     providers: [
@@ -13,10 +15,17 @@ import { UserUpdateController } from "./infrastructure/controllers/user-update.c
                 const userRepositoryStorage = new UserRepositoryStorage(entityManager)
                 return new UpdateUserUseCase(userRepositoryStorage)
             }, inject: [EntityManager]
+        }, {
+            provide: GetInfoUserCase,
+            useFactory: (entityManager: EntityManager) => {
+                const userRepositoryStorage = new UserRepositoryStorage(entityManager)
+                return new GetInfoUserCase(userRepositoryStorage)
+            }, inject: [EntityManager]
         }
     ],
     controllers: [
-        UserUpdateController
+        UserUpdateController,
+        GetInfoUserController
     ]
 })
 
