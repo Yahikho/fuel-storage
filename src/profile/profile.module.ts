@@ -5,8 +5,10 @@ import { EntityManager } from "typeorm";
 import { UserUpdateController } from "./infrastructure/controllers/user-update.controller";
 import { GetInfoUserController } from "./infrastructure/controllers/get-info-user.controller";
 import { GetInfoUserCase } from "./application/get-info-user.usecase";
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
+    imports: [ConfigModule],
     providers: [
         UserRepositoryStorage,
         {
@@ -17,10 +19,10 @@ import { GetInfoUserCase } from "./application/get-info-user.usecase";
             }, inject: [EntityManager]
         }, {
             provide: GetInfoUserCase,
-            useFactory: (entityManager: EntityManager) => {
+            useFactory: (entityManager: EntityManager, configService: ConfigService) => {
                 const userRepositoryStorage = new UserRepositoryStorage(entityManager)
-                return new GetInfoUserCase(userRepositoryStorage)
-            }, inject: [EntityManager]
+                return new GetInfoUserCase(userRepositoryStorage, configService)
+            }, inject: [EntityManager, ConfigService]
         }
     ],
     controllers: [

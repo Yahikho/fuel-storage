@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { ProfileRepository } from "../domain/repositories/profile.repository";
+import { ConfigService } from '@nestjs/config';
 
 export class GetInfoUserCase {
 
-    constructor(private readonly profileRepository: ProfileRepository) { }
+    constructor(private readonly profileRepository: ProfileRepository, private configService: ConfigService) { }
 
     async execute(id: number) {
         try {
@@ -15,7 +16,8 @@ export class GetInfoUserCase {
                     response: true,
                     message: '',
                     data: {
-                        avatar: user.avatar
+                        avatar: user.avatar ? user.avatar : this.configService.get<string>('AWS_IMG_DEFAULT_AVATAR'),
+                        username: user.user_name
                     }
                 }
             }
