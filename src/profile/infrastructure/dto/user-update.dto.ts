@@ -33,9 +33,4 @@ export class UserUpdateDto {
     })
     @ApiProperty({ description: 'Confirm user password' })
     confirmPassword: string
-
-    @IsString()
-    @IsOptional()
-    @ApiProperty({ description: 'URL user avatar' })
-    avatar?: string
 }

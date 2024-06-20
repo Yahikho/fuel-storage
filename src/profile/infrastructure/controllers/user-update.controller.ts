@@ -20,20 +20,7 @@ export class UserUpdateController {
     @Post('update-user')
     @UseGuards(JwtAuthGuard)
     async userUpdate(
-        @UploadedFile(
-            new ParseFilePipeBuilder()
-                .addFileTypeValidator({
-                    fileType: 'jpeg'
-                })
-                .build({
-                    exceptionFactory: (err) => {
-                        throw new HttpException({
-                            response: false,
-                            message: err
-                        }, HttpStatus.BAD_REQUEST)
-                    }
-                })
-        ) file: Express.Multer.File,
+        @UploadedFile() file: Express.Multer.File | null,
         @Body() body: any,
         @Res() res: Response,
         @CurrentUserDecorator() user: { userId: number },

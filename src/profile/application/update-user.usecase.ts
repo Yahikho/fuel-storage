@@ -33,17 +33,27 @@ export class UpdateUserUseCase {
             }
 
             if (file) {
-                const ext = file.originalname.split('.').pop()
+                const ext = file.originalname.split('.').pop().toLocaleUpperCase()
 
-                const addAvatarService = new AddAvatarService(`${user.user_name}.${ext}`)
+                if (['jpeg', 'jpg', 'png'].includes(ext)) {
 
-                const uploadFile = await addAvatarService.putObject(file)
+                    const addAvatarService = new AddAvatarService(`${user.user_name}.${ext}`)
 
-                if (uploadFile) {
-                    urlAvatar = uploadFile
+                    const uploadFile = await addAvatarService.putObject(file)
+
+                    if (uploadFile) {
+                        urlAvatar = uploadFile
+                    }
+
+                    isUpdate = true
+                } else {
+                    return {
+                        code: HttpStatus.BAD_REQUEST,
+                        response: false,
+                        message: 'file must be (jpg, jpeg, png)',
+                    }
                 }
 
-                isUpdate = true
             }
 
             if (isUpdate) {
