@@ -33,7 +33,7 @@ export class UpdateUserUseCase {
             }
 
             if (file) {
-                const ext = file.originalname.split('.').pop().toLocaleUpperCase()
+                const ext = file.originalname.split('.').pop().toLowerCase()
 
                 if (['jpeg', 'jpg', 'png'].includes(ext)) {
 
@@ -59,7 +59,7 @@ export class UpdateUserUseCase {
             if (isUpdate) {
                 const updateUser = await this.profileRepository.udateUser({
                     id: userUpdate.id,
-                    password: userUpdate.password ? await CryptPassword.hash(userUpdate.password) : userUpdate.password,
+                    password: userUpdate.password ? await CryptPassword.hash(userUpdate.password) : user.password,
                     avatar: urlAvatar
                 })
 

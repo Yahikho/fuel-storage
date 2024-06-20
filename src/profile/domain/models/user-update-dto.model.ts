@@ -1,6 +1,6 @@
 export class UserUpdateInputModel {
-    oldPassword: string
-    confirmPassword: string
-    password: string
+    oldPassword?: string
+    confirmPassword?: string
+    password?: string
     id: number
 }
