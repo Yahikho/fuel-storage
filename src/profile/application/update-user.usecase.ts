@@ -11,9 +11,10 @@ export class UpdateUserUseCase {
 
     async execute(userUpdate: UserUpdateInputModel, file?: Express.Multer.File) {
         try {
-            let urlAvatar: string = null
+
             let isUpdate = false
             const user = await this.profileRepository.getUserById(userUpdate.id)
+            let urlAvatar: string = user.avatar
 
             if (userUpdate.password) {
                 const validaPasswordsService =
